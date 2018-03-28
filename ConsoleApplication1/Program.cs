@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace ConsoleApplication1
 {
@@ -100,13 +101,49 @@ namespace ConsoleApplication1
             tm.CurAbr = parseCurAbr.ToString();
 
 
+            // извлекаем пропорцию соотношения 1:М
+            string patternHowMany = @"Cur_Scale"":\d*";
+            Regex reg3 = new Regex(patternHowMany); // здесь паттерн поиска
+            Match parseHowMany = reg3.Match(arrObj[i]); // выбранная подстрока
+            string newStr = parseHowMany.ToString();
+            //Console.WriteLine(">> " + newStr); // отработала
+
+
+            //string newStr2 = @"Cur_Scale"":100";
+            string patternHowMany2 = @"[0-9]{1,}";
+            Regex reg4 = new Regex(patternHowMany2);
+            Match parseHowMany2 = reg4.Match(parseHowMany.ToString());
+            tm.HowMany = Convert.ToInt32(parseHowMany2.ToString());
+
+            /*
+            if (reg4.IsMatch(newStr))
+               Console.WriteLine("В исходной строке: \"{0}\" есть совпадения [[{1}]]!", newStr, (Convert.ToInt32(reg4.Match(newStr).ToString())).ToString());
+            else
+               Console.WriteLine("ПОЧЕМУ ТО НЕ НАШЕЛ");
+            */
+
+            // извлекаем имя валюты
+            string patternCuName = @"([а-я]+\W\([а-я]+\W[а-я]+\W[а-я]+\))|([а-я]+\W[а-я]+)|([а-я]+)";
+            Regex reg5 = new Regex(patternCuName, RegexOptions.IgnoreCase);
+            Match parseCurName = reg5.Match(arrObj[i]);
+
+            tm.CurName = parseCurName.ToString();
+
+            // извлечение актуального курса
+            string patternCurRate = @"(\d+\.{1}\d+)";
+            Regex reg6 = new Regex(patternCurRate);
+            Match parseCurRate = reg6.Match(arrObj[i]);
+            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+            tm.CurRate = double.Parse(parseCurRate.ToString());
+
+
             listTm.Add(tm); // добавляю
          }
 
 
          foreach (TypeMoney t in listTm)
          {
-            Console.WriteLine(t.Date + " " + t.CurAbr);
+            Console.WriteLine(t.Date + " " + t.CurAbr + " " + t.HowMany + " " + t.CurName + " " + t.CurRate);
          }
 
 
