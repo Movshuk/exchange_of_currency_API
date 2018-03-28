@@ -19,6 +19,9 @@ namespace ConsoleApplication1
       {
          WebRequest request = WebRequest.Create("http://www.nbrb.by/API/ExRates/Rates?Periodicity=0");
 
+      // запрос курса на дату:
+      // http://www.nbrb.by/API/ExRates/Rates?onDate=2018-3-29&Periodicity=0
+
          WebResponse response = request.GetResponse();
 
          string line = null;
@@ -43,6 +46,7 @@ namespace ConsoleApplication1
                */
             //}
             // здесь строки уже нет
+            reader.Close();
          }
 
          
@@ -140,13 +144,16 @@ namespace ConsoleApplication1
             listTm.Add(tm); // добавляю
          }
 
+         Console.WriteLine("Официальные курсы белорусского рубля по отношению к иностранным валютам, на сегодня ");
 
+         // вывод на экран
          foreach (TypeMoney t in listTm)
          {
             Console.WriteLine(t.Date + " " + t.CurAbr + " " + t.HowMany + " " + t.CurName + " " + t.CurRate);
          }
 
-
+         Console.WriteLine("Press Enter....");
+         Console.ReadKey();
       }
    }
 }
