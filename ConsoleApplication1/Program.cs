@@ -110,18 +110,22 @@ namespace ConsoleApplication1
 
 
                // извлекаем пропорцию соотношения 1:М
-               string patternHowMany = @"Cur_Scale"":\d*";
+               string patternHowMany = @"Cur_Scale"":(\d*)";
                Regex reg3 = new Regex(patternHowMany); // здесь паттерн поиска
                Match parseHowMany = reg3.Match(arrObj[i]); // выбранная подстрока
-               string newStr = parseHowMany.ToString();
+               //string newStr = parseHowMany.ToString();
+               string newStr = parseHowMany.Groups[1].Value.ToString(); // Берем по регулярке первую группу вхождения (\d*)
                //Console.WriteLine(">> " + newStr); // отработала
 
 
                //string newStr2 = @"Cur_Scale"":100";
-               string patternHowMany2 = @"[0-9]{1,}";
-               Regex reg4 = new Regex(patternHowMany2);
-               Match parseHowMany2 = reg4.Match(parseHowMany.ToString());
-               tm.HowMany = Convert.ToInt32(parseHowMany2.ToString());
+               
+               //string patternHowMany2 = @"[0-9]{1,}";
+               //Regex reg4 = new Regex(patternHowMany2);
+               //Match parseHowMany2 = reg4.Match(parseHowMany.ToString());
+               //tm.HowMany = Convert.ToInt32(parseHowMany2.ToString());
+
+               tm.HowMany = Convert.ToInt32(newStr);
 
                /*
                if (reg4.IsMatch(newStr))
